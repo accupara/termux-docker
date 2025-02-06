@@ -18,7 +18,7 @@ build_%:
 	-docker rm -f saveit-$*
 	@echo "Run the following in the docker container: 'pkg upgrade -y && exit 0'"
 	docker run --name saveit-$* -it --privileged --platform $* termux/termux-docker:$* bash
-	docker commit saveit-$* accupara/termux-docker:$*
+	docker commit -c "CMD $$(docker inspect termux/termux-docker:$* | jq --indent 0 '.[].Config.Cmd')" saveit-$* accupara/termux-docker:$*
 	docker push accupara/termux-docker:$*
 	docker rm saveit-$*
 
